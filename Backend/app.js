@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import userRoute from "./routes/user.routes.js"
 const app = express();
 dotenv.config()
 
@@ -13,7 +14,10 @@ const URI = process.env.URI
     console.log(err)
   })
 
+app.use(express.json())
 
+
+app.use("/api/v1",userRoute)
 
 
 
