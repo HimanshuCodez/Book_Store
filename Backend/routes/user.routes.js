@@ -1,7 +1,9 @@
 import express from 'express';
 import User from '../models/user.model.js';
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken'
 const router = express.Router();
+
 
 // Signup route
 router.post("/sign-up", async (req, res) => {
@@ -43,4 +45,50 @@ router.post("/sign-up", async (req, res) => {
     }
 });
 
+
+// Sign-in route
+router.post("/sign-in", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+
+        // Create JWT token
+        const token = jwt.sign(
+            {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            },
+            process.env.JWT_SECRET 
+            { expiresIn: "3d" }
+        );
+
+        // Send response with token and user details
+        res.status(200).json({
+            message: "Login successful",
+            id: user._id,
+            role: user.role,
+            token: token
+        });
+
+    } catch (error) {
+        console.error("Error during login:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 export default router;
+
+
