@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/user.model.js';
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken'
+import authenticateToken from './userAuth.routes.js';
 const router = express.Router();
 
 
@@ -71,7 +72,7 @@ router.post("/sign-in", async (req, res) => {
                 email: user.email,
                 role: user.role
             },
-            process.env.JWT_SECRET 
+            process.env.JWT_SECRET ,
             { expiresIn: "3d" }
         );
 
@@ -89,6 +90,20 @@ router.post("/sign-in", async (req, res) => {
     }
 });
 
+
+//get user info
+
+router.get("/get-user-info",authenticateToken, async (req, res) => {
+    try {
+        const {id} =req.headers;
+        const data = await User.findById(id).select('-password');
+
+       return res.status(200).json(data);
+
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 export default router;
 
 
