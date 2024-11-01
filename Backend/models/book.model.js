@@ -27,6 +27,6 @@ url:{
     required: true,
  },
 
-}{timestamps:true})
+},{timestamps:true})
 //model
 export default mongoose.model("books", bookSchema);

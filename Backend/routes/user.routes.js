@@ -104,6 +104,20 @@ router.get("/get-user-info",authenticateToken, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+
+router.put("/update-address",authenticateToken,async(req,res)=>{
+
+try {
+     const {id} = req.headers;
+     const {address} = req.body;
+      await User.findByIdAndUpdate(id, {address:address});
+     return res.status(200).json( {message:"address updated successfully"});
+ 
+} catch (error) {
+     res.status(500).json({ message: "Internal server error" });
+}
+})
 export default router;
 
 
