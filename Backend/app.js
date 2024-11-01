@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoute from "./routes/user.routes.js"
+import bookRoute from './routes/book.routes.js'
 const app = express();
 dotenv.config()
 
@@ -18,6 +19,7 @@ app.use(express.json())
 
 
 app.use("/api/v1",userRoute)
+app.use("/api/v1",bookRoute)
 
 
 
