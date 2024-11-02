@@ -21,7 +21,7 @@ const router = express.Router();
             res.status(500).json(error);
         }
     });
- router.delete('/remove-from-favourite', authenticateToken, async (req, res) => {
+ router.put('/remove-from-favourite', authenticateToken, async (req, res) => {
     
         try {
             const { bookid, id } = req.headers;
