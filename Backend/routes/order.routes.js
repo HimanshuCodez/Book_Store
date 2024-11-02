@@ -67,20 +67,21 @@ router.get("/get-all-orders", authenticateToken, async (req, res) => {
         return res.status(500).json(error);
     }
 })
-router.get("/update-orders", authenticateToken, async (req, res) => {
+router.get("/update-status/:id", authenticateToken, async (req, res) => {
     try {
-        const userData = await Order.find().populate({ path: "book", }).populate({ path: "user", }).sort({ createdAt: -1 });
+        const {id} = req.params;
+         await Order.findByIdAndUpdate(id,{status:req.body.status})
         return res.status(200).json({
-            status: "success",
-            data: userData,
-            message: "All orders fetched successfully"
+            status: "success",          
+            message: " update status successfully"
         })
 
     } catch (error) {
-      console.log('Error getting all orders', error);
+      console.log('Error getting update orders', error);
         return res.status(500).json(error);
     }
 })
+
 
 
 
